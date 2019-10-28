@@ -6,17 +6,17 @@ import matplotlib.pyplot as plt
 import urllib
 import nltk
 import spacy
-import en_core_web_sm
+# import en_core_web_sm
 import pytesseract as pt
 from nltk.corpus import stopwords
 from PIL import Image
 from gingerit.gingerit import GingerIt
 import googlemaps
 
-nltk.download("stopwords") # downloading nltk stop words
-nltk.download("punkt")
+# nltk.download("stopwords") # downloading nltk stop words
+# nltk.download("punkt")
 # assigning variables
-nlp = en_core_web_sm.load()
+# nlp = en_core_web_sm.load()
 stop_words = stopwords.words("english")
 gmaps = googlemaps.Client(key='AIzaSyAlvT9QoXecXq_WFfd4_slajtCnMJBXB6Y')
 pt.pytesseract.tesseract_cmd = '/app/.apt/usr/bin/tesseract'
@@ -118,7 +118,7 @@ def home():
             startload = True
             st = True
             conf = False
-            if addr == "Address verified":
+            if addr == "The Company address is valid":
                 cont = "This address looks legit"
                 auth = True
             else:
@@ -264,10 +264,18 @@ def word(filename, final_type): # function to tokenize text
 
 def verify_address(address):    
     geocode_result = gmaps.geocode(address)
-    if geocode_result != '[]':
-        return "Address verified"
+    # if geocode_result != '[]':
+    #     return "Address verified"
+    # else:
+    #     return "Couldn't verify address"
+    if geocode_result == []:
+        return "This address is invalid"
     else:
-        return "Couldn't verify address"
+        geocode_result= geocode_result[0]
+        if 'plus_code' in geocode_result:
+            return "The Company address is valid"
+        else:
+            return "This address is vague, This job invite is likely a scam"
 
 def confidence_interval():
     global correction
